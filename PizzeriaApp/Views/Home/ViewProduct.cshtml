@@ -1,0 +1,247 @@
+﻿@model PizzeriaApp.ViewModels.ViewSpecificProduct
+
+@{
+    ViewData["Title"] = "View item";
+}
+<form asp-action="CreateOrder" id="orderForm">
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-lg-4 col-md-12 col-sm-12 p-0">
+            <div class="col-12 col-lg-12 col-md-6 col-sm-8 mx-auto mt-lg-5 justify-content-center">
+                <h2 class="title font-weight-bold text-center">@Model.Product.Name</h2>
+                    <div class="d-flex justify-content-center"><img class="img-fluid" src="data:image/jpeg;base64,@Convert.ToBase64String(@Model.Product.Image)"></div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-8 col-md-12 col-sm-12 my-2">
+            <div class="row sub-titles mt-lg-5 text-center">
+                <div class="col-12 col-lg-6 col-md-6 col-sm-12 mt-sm-2 mb-sm-3 mt-md-2 mx-auto">
+                    <div class="col-10 col-lg-12 col-md-10 col-sm-8 mx-auto">
+                        <div class="col-12 col-lg-10 col-md-12 col-sm-12 mx-auto">
+                            <p>
+                                @Model?.Product.Description
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-12 col-md-12 col-sm-12 mt-lg-2">
+                <div class="col-12 col-lg-12 col-md-12 col-sm-12 p-0">
+                    <div class="row circle-items" id="circle-items">
+                        @foreach (var item in Model.Size)
+                        {
+                            switch (item.Name)
+                            {
+                                case "S":
+                                    <div class="col-4 col-lg-4 col-md-4 col-sm-4 px-0 circle-item" id="test" name="test">
+                                            <div class="circle small" data-value="0" data-id="@item.Id">
+                                            <div class="circle__inner">
+                                                <div class="circle__wrapper">
+                                                    <div class="circle__content">@item.Name</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-center mt-3">
+                                                @{
+                                                    var priceS = Model.Product.Price * Model.Product.Multiplier;
+                                                }
+                                                @Math.Round(@priceS, 2) €
+                                        </p>
+                                    </div>
+                                    break;
+                                case "15 cm":
+                                    <div class="col-4 col-lg-4 col-md-4 col-sm-4 px-0 circle-item" id="test" name="test">
+                                            <div class="circle small" data-value="0" data-id="@item.Id">
+                                            <div class="circle__inner">
+                                                <div class="circle__wrapper">
+                                                    <div class="circle__content">@item.Name</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-center mt-3">
+                                                  @{
+                                                    var price15 = Model.Product.Price * Model.Product.Multiplier;
+                                                }
+                                                @Math.Round(@price15, 2) €
+                                        </p>
+                                    </div>
+                                    break;
+                                case "M":
+                                    <div class="col-4 col-lg-4 col-md-4 col-sm-4 px-0 circle-item" id="test" name="test">
+                                            <div class="circle medium" data-value="1" data-id="@item.Id">
+                                            <div class="circle__inner">
+                                                <div class="circle__wrapper">
+                                                    <div class="circle__content">@item.Name</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-center mt-3">
+                                            @{
+                                                    double priceM = (Model.Product.Price * Model.Product.Multiplier) * 0.40 + @Model.Product.Price * Model.Product.Multiplier;
+
+                                            } @Math.Round(priceM, 2) €
+                                        </p>
+                                    </div>
+                                    break;
+                                case "28 cm":
+                                    <div class="col-4 col-lg-4 col-md-4 col-sm-4 px-0 circle-item" id="test" name="test">
+                                            <div class="circle medium" data-value="1" data-id="@item.Id">
+                                            <div class="circle__inner">
+                                                <div class="circle__wrapper">
+                                                    <div class="circle__content">@item.Name</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-center mt-3">
+                                            @{
+                                                    double price28 = (Model.Product.Price * Model.Product.Multiplier) * 0.40 + (Model.Product.Price * Model.Product.Multiplier);
+
+                                            } @Math.Round(price28, 2) €
+                                        </p>
+                                    </div>
+                                    break;
+                                case "L":
+                                    <div class="col-4 col-lg-4 col-md-4 col-sm-4 px-0 circle-item" id="test" name="test">
+                                            <div class="circle large" data-value="2" data-id="@item.Id">
+                                            <div class="circle__inner">
+                                                <div class="circle__wrapper">
+                                                    <div class="circle__content">@item.Name</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-center mt-3">
+                                            @{
+                                                    double priceL = (Model.Product.Price * Model.Product.Multiplier) * 0.90 + (Model.Product.Price * Model.Product.Multiplier);
+                                            } @Math.Round(priceL, 2) €
+                                        </p>
+                                    </div>
+                                    break;
+                                case "50 cm":
+                                    <div class="col-4 col-lg-4 col-md-4 col-sm-4 px-0 circle-item" id="test" name="test">
+                                            <div class="circle large" data-value="2" data-id="@item.Id">
+                                            <div class="circle__inner">
+                                                <div class="circle__wrapper">
+                                                    <div class="circle__content">@item.Name</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p class="text-center mt-3">
+                                            @{
+                                                    double price50 = (Model.Product.Price * Model.Product.Multiplier) * 0.90 + (Model.Product.Price * Model.Product.Multiplier);
+                                            } @Math.Round(price50, 2) €
+                                        </p>
+                                    </div>
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-12 col-lg-12 col-md-12 col-sm-12">
+                        <div class="form-inline d-flex justify-content-center">
+                            <div class="form-group">
+                                <button class="btn btn-danger" type="button" onClick="subtractClick()">-</button>
+                                    <input class="form-control-custom mx-1 text-center p-0" type="number" id="clicks" asp-for="OrderDetails.Count"
+                                       value="1" min="1" max="50" oninput="this.value = Math.abs(this.value)" />
+                                <button class="btn btn-success" type="button" onClick="addClick()">+</button>
+                                <button type="submit" class="mx-4 btn btn-primary">Pievienot Grozam</button>
+                                <p class="sum-style align-middle ml-lg-5 d-flex justify-content-center">
+
+                                        <span id="summ-output">-</span> <span class="ml-2">€</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <input type="hidden" asp-for="OrderDetails.ProductsId" value="@Model.Product.Id" />
+    <input type="hidden" asp-for="OrderDetails.Price" />
+    <input type="hidden" asp-for="OrderDetails.SizeId" />
+</form>
+@section Scripts{
+    <script>
+        const circles = document.querySelectorAll('.circle-item');
+
+        // Active item
+        $(".circle").click(function () {
+            $(this).addClass('circle-focus').parent().siblings().children().removeClass('circle-focus')
+        });
+        $(document).ready(function () {
+            document.getElementById("orderForm").addEventListener("submit", function (e) {
+                const selected = document.querySelector('.circle-focus');
+                if (!selected) {
+                    e.preventDefault();
+                    alert("Izvēlies picas izmēru pirms pievienošanas grozam.");
+                }
+            });
+        });
+
+        let clicks = parseInt(document.getElementById("clicks").value);
+
+        function addClick() {
+            clicks = parseInt(document.getElementById("clicks").value)
+            if (clicks <= 0) {
+                clicks = 1;
+            }
+            if (clicks < 50) {
+                clicks += 1;
+                document.getElementById("clicks").value = clicks;
+
+            } else {
+                alert("Nevar virs 50! 🥶")
+            }
+            if (!isNaN(summ())) {
+                document.getElementById("summ-output").innerHTML = summ();
+                document.getElementById("OrderDetails_Price").value = summ();
+            }
+        };
+        document.getElementById("circle-items").addEventListener("click", function () {
+            if (!isNaN(summ())) {
+                document.getElementById("summ-output").innerHTML = summ();
+                document.getElementById("OrderDetails_Price").value = summ();
+            }
+        }, false);
+        function subtractClick() {
+            clicks = parseInt(document.getElementById("clicks").value)
+            if (clicks <= 0) {
+                clicks = 1;
+            }
+            if (clicks > 1) {
+                clicks -= 1;
+                document.getElementById("clicks").value = clicks;
+
+            } else {
+                alert("Nevar zem 1! 🥶")
+            }
+
+            if (!isNaN(summ())) {
+                document.getElementById("summ-output").innerHTML = summ();
+                document.getElementById("OrderDetails_Price").value = summ();
+            }
+        };
+        console.log(@Model.Product.Price);
+        function summ() {
+            var id = $('div#test').find('div.circle-focus').data('value');
+            var SizeId = $('div#test').find('div.circle-focus').data('id');
+            var price = @Model.Product.Price;
+            var multiplier = @Model.Product.Multiplier;
+            document.getElementById("OrderDetails_SizeId").value = SizeId;
+
+            //small[0], medium[1], large[2]
+            let values = [price, price * 0.40 + price, price * 0.90 + price];
+            console.log(values);
+            let count = parseInt(document.getElementById("clicks").value);
+
+            if (isNaN(id)) {
+                alert("Izvēlies picas izmēru!")
+            } else
+                return Math.round((values[id] * count * multiplier) * 100) / 100;
+        }
+    </script>
+}

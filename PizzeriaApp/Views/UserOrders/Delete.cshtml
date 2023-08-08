@@ -1,0 +1,52 @@
+﻿@model PizzeriaApp.Models.UserOrders
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<h1>Dzēšana</h1>
+
+<h3>Vai tiešām vēlaties dzēst šo ierakstu?</h3>
+<div>
+    <h4>Lietotāju pasūtījums</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Lietotājs
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.User.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            Pasūtījuma detaļas
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OrderDetails.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            Status
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Status.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            Izveodšanas laiks
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CreatedAt)
+        </dd>
+        <dt class = "col-sm-2">
+            Pamatpasūtījums
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ParentOrder.Id)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Dzēst" class="btn btn-danger" /> |
+        <a asp-action="Index">Atpakaļ uz sarakstu</a>
+    </form>
+</div>

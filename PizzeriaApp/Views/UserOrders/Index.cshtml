@@ -1,0 +1,80 @@
+﻿@model IEnumerable<PizzeriaApp.Models.UserOrders>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+}
+@section Scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+    </script>
+}
+
+<p>
+        <a asp-action="Create">Izveidot jaunu lietotāja pasūtījumu</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Lietotājs
+            </th>
+            <th>
+                Pasūtījuma detaļas
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Izveodšanas laiks
+            </th>
+            <th>
+                Pamatpasūtījums
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Email)
+            </td>
+            <td>
+                    @if (item.OrderDetails != null)
+                    {
+                        <a asp-action="Details" asp-controller="OrderDetails" asp-route-id="@item.OrderDetails.Id">@Html.DisplayFor(modelItem => item.OrderDetails.Id)</a>
+
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.OrderDetails.Id)
+                    }
+                
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                    @if (item.ParentOrder != null)
+                    {
+                        <a asp-action="Details" asp-route-id="@item.ParentOrder.Id">@Html.DisplayFor(modelItem => item.ParentOrder.Id)</a>
+
+                    }else {
+                        @Html.DisplayFor(modelItem => item.ParentOrder.Id)
+                    }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Rediģēt</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Dzēst</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

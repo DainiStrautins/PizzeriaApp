@@ -1,0 +1,102 @@
+﻿@model PizzeriaApp.ViewModels.ViewAdditional
+
+@{
+    ViewData["Title"] = "View additional menu";
+}
+<section class="first-section" id="menu-nav">
+    <div class="container-fluid">
+        <div class="row justify-content-center justify-content-md-between">
+            <div class="col-md-12 col-lg-12 col-12">
+                <div class="row justify-content-center pt-lg-4 pt-md-0 pt-0">
+                    @foreach (var item in Model.MenuSnacks)
+                    {
+                        <div class="
+                  col-12 col-lg-3 col-md-6 col-sm-12
+                  my-lg-2 my-md-5 my-ms-2 my-2
+                  d-flex
+                  justify-content-center
+                ">
+                            <a class="card-title" asp-action="ViewSelectedCategoryProducts" asp-controller="Home" asp-route-id="@item.Category.Id">
+                                <div class="card">
+                                    <img class="img-fluid mobile-image" src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image)">
+                                    <div class="card-body p-sm-0 p-0 p-lg-3">
+                                        <h3 class="card-title text-center">@item.Category.Name</h3>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<hr>
+<section class="item-section" id="items">
+    <div class="container">
+        <div class="row justify-content-center justify-content-md-between">
+            <div class="col-md-12 col-lg-12 col-12">
+                <h2 class="text-center my-5">Visas preces</h2>
+                <div class="row justify-content-center pt-lg-4 pt-md-0 pt-0">
+@foreach (var item in Model.ExampleOfSnacks)
+                    {
+                        switch (item.Category.Name)
+                        {
+                        case "Burgeri":
+                                <div class="col-12 col-lg-3 col-md-6 col-sm-12 my-lg-2 my-md-5 my-ms-2 my-2 d-flex justify-content-center bg-yelow-hover">
+                                    <a class="card-title" asp-action="ViewProduct" asp-controller="Home" asp-route-id="@item.Id">
+                                        <div class="card mx-auto h-100 bg-yelow">
+                                                <img class="img-fluid" src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image)">
+                                                <div class="card-body p-sm-0 p-0 p-lg-3">
+                                                    <h3 class="card-title text-center">@item.Name</h3>
+                                                </div>
+                                        </div>
+                                     </a>
+                                </div>
+                        break;
+                            case "Uzkodas":
+                                <div class="col-12 col-lg-3 col-md-6 col-sm-12 my-lg-2 my-md-5 my-ms-0 my-1 d-flex justify-content-center bg-green-hover">
+                                     <a class="card-title" asp-action="ViewProduct" asp-controller="Home" asp-route-id="@item.Id">
+                                        <div class="card mx-auto h-100 bg-green">
+                                                <img class="img-fluid" src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image)">
+                                                <div class="card-body p-sm-0 p-0 p-lg-3">
+                                                    <h3 class="card-title text-center">@item.Name</h3>
+                                                </div>
+                                        </div>
+                                      </a>
+                                </div>
+                                break;
+                            case "Dzērieni":
+                                <div class="col-12 col-lg-3 col-md-6 col-sm-12 my-lg-2 my-md-5 my-ms-0 my-1 d-flex justify-content-center bg-blueish-hover">
+                                    <a class="card-title" asp-action="ViewProduct" asp-controller="Home" asp-route-id="@item.Id">
+                                        <div class="card mx-auto h-100 bg-blueish">
+                                                <img class="img-fluid" src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image)">
+                                                <div class="card-body p-sm-0 p-0 p-lg-3">
+                                                    <h3 class="card-title text-center">@item.Name</h3>
+                                                </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                break;
+                            case "Saldie":
+                                <div class="col-12 col-lg-3 col-md-6 col-sm-12 my-lg-2 my-md-5 my-ms-0 my-1 d-flex justify-content-center bg-purple-hover">
+                                    <a class="card-title" asp-action="ViewProduct" asp-controller="Home" asp-route-id="@item.Id">
+                                        <div class="card mx-auto h-100 bg-purple">
+                                            <img class="img-fluid" src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image)">
+                                            <div class="card-body p-sm-0 p-0 p-lg-3">
+                                                <h3 class="card-title text-center">@item.Name</h3>
+                                            </div>
+                                        </div
+                                    </a>
+                                </div>
+
+                                break;
+                        default:
+                                break;
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

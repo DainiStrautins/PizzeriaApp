@@ -1,0 +1,59 @@
+﻿@model PizzeriaApp.Models.OrderDetails
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<h1>Rediģēšana</h1>
+
+<h4>Pasūtījuma deteļas</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="ProductsId" class="control-label">Produkts</label>
+                <select asp-for="ProductsId" class="form-control" asp-items="ViewBag.ProductsId">
+                    <option></option>
+                </select>
+                <span asp-validation-for="ProductsId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SizeId" class="control-label">Izmērs</label>
+                <select asp-for="SizeId" class="form-control" asp-items="ViewBag.SizeId">
+                    <option></option>
+                </select>
+                <span asp-validation-for="SizeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label">Cena</label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Count" class="control-label">Skaits</label>
+                <input asp-for="Count" class="form-control" />
+                <span asp-validation-for="Count" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Recipe" class="control-label"> Veido Pats</label>
+                <input asp-for="Recipe" class="form-control" />
+                <span asp-validation-for="Recipe" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Saglabāt" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Atpakaļ uz sarakstu</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

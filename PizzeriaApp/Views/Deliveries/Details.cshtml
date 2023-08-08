@@ -1,0 +1,61 @@
+﻿@model PizzeriaApp.Models.Delivery
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<h1>Papildus informācija</h1>
+
+<div>
+    <h4>Piegāde</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Piegādes tips
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DeliveryType.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            Piegādes adrese
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DeliveryAddress)
+        </dd>
+        <dt class = "col-sm-2">
+            Kontaktpersonas vārds
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ContactName)
+        </dd>
+        <dt class = "col-sm-2">
+            Tālruņa numurs
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ContactPhone)
+        </dd>
+        <dt class = "col-sm-2">
+            Instrukcijas
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Instructions)
+        </dd>
+        <dt class = "col-sm-2">
+            Pasūtījuma izsekošanas kods
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TrackingNumber)
+        </dd>
+        <dt class = "col-sm-2">
+            Plānotais piegādes laiks
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DeliveryDate)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Atpakaļ uz sarakstu</a>
+</div>

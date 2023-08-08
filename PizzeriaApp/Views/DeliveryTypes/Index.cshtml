@@ -1,0 +1,54 @@
+﻿@model IEnumerable<PizzeriaApp.Models.DeliveryType>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+}
+@section Scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+    </script>
+}
+<h1>Pasūtījuma veids</h1>
+
+<p>
+        <a asp-action="Create">Izveido jauna tipu</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               Nosaukums
+            </th>
+            <th>
+                Apraksts
+            </th>
+            <th>
+                Cena
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Rediģēt</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Dzēst</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

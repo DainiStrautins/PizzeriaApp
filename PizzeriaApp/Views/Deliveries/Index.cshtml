@@ -1,0 +1,79 @@
+﻿@model IEnumerable<PizzeriaApp.Models.Delivery>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+}
+@section Scripts{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.table').DataTable();
+        });
+    </script>
+}
+
+<h1>Pasūtījums</h1>
+
+<p>
+        <a asp-action="Create">Izveido jaunu pasūtījumu</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Piegādes tips
+            </th>
+            <th>
+                Piegādes adrese
+            </th>
+            <th>
+                Kontaktpersonas vārds
+            </th>
+            <th>
+                Tālruņa numurs
+            </th>
+            <th>
+                Instrukcijas
+            </th>
+            <th>
+                Pasūtījuma izsekošanas kods
+            </th>
+            <th>
+                Plānotais piegādes laiks
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeliveryType.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeliveryAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactPhone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Instructions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrackingNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeliveryDate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Rediģēt</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Dzēst</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

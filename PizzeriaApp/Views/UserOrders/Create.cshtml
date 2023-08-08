@@ -1,0 +1,58 @@
+﻿@model PizzeriaApp.Models.UserOrders
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<h1>Izveidošana</h1>
+
+<h4>Lietotāju pasūtījums</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="UserId" class="control-label">Lietotājs</label>
+                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId">
+                    <option></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrderDetailsId" class="control-label">Pasūtījuma detaļas</label>
+                <select asp-for="OrderDetailsId" class ="form-control" asp-items="ViewBag.OrderDetailsId">
+                       <option></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="StatusId" class="control-label">Status</label>
+                <select asp-for="StatusId" class ="form-control" asp-items="ViewBag.StatusId">
+                    <option></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedAt" class="control-label">Izveidošanas laiks</label>
+                <input asp-for="CreatedAt" class="form-control" />
+                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ParentOrderId" class="control-label">Pamatpasūtījums</label>
+                <select asp-for="ParentOrderId" class ="form-control" asp-items="ViewBag.ParentOrderId">
+                    <option></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Izveidot" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Atpakaļ uz sarakstu</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

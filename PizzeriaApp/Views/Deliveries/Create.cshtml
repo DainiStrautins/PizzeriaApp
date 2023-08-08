@@ -1,0 +1,65 @@
+﻿@model PizzeriaApp.Models.Delivery
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<h1>Izveidošana</h1>
+
+<h4>Piegāde</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DeliveryTypeId" class="control-label">Piegādes veids</label>
+                <select asp-for="DeliveryTypeId" class ="form-control" asp-items="ViewBag.DeliveryTypeId">
+                    <option></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeliveryAddress" class="control-label">Adrese</label>
+                <input asp-for="DeliveryAddress" class="form-control" />
+                <span asp-validation-for="DeliveryAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactName" class="control-label">Saņēmēja vārds</label>
+                <input asp-for="ContactName" class="form-control" />
+                <span asp-validation-for="ContactName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactPhone" class="control-label">Telefona numurs</label>
+                <input asp-for="ContactPhone" class="form-control" />
+                <span asp-validation-for="ContactPhone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Instructions" class="control-label">Papildus instrukcijas</label>
+                <input asp-for="Instructions" class="form-control" />
+                <span asp-validation-for="Instructions" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TrackingNumber" class="control-label">Pasūtījuma izsekošanas numurs</label>
+                <input asp-for="TrackingNumber" class="form-control" />
+                <span asp-validation-for="TrackingNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeliveryDate" class="control-label">Piegādes laiks</label>
+                <input asp-for="DeliveryDate" class="form-control" />
+                <span asp-validation-for="DeliveryDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Atpakaļ uz sarakstu</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

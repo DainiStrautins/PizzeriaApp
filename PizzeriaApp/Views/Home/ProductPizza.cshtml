@@ -1,0 +1,169 @@
+﻿@model PizzeriaApp.ViewModels.ProductPaginationViewModel
+
+@{
+    ViewData["Title"] = "Picas";
+}
+
+<form method="post" asp-controller="Home" asp-action="ProductPizza">
+    <div class="d-flex align-content-center align-items-center justify-content-center col-8 mx-auto my-4">
+        <div class="mx-4">
+            <label for="exampleFormControlSelect2">Filtrēt pēc</label>
+            <select multiple class="form-control form-control-sm" id="exampleFormControlSelect2" onchange="filterBadges()" asp-for="Badges">
+                @foreach (var item in Model.Badges)
+                {
+                    <option value="@item.Name">
+                        Pica - @item.Description
+                    </option>
+                }
+
+            </select>
+        </div>
+        <div class="col-3 mt-4">
+            <input type="submit" value="Filtrēt" class="btn credit-inputs btn-success btn-block">
+            <a href="@Url.Action("ResetFilters", "Home")" class="btn btn-sm credit-inputs btn-danger btn-block">
+                Nodzēst filtrus
+            </a>
+
+        </div>
+    </div>
+
+</form>
+<section class="pt-0 mb-5" id="pizzas">
+
+        @if (@Model.Products.Count() != 0)
+        {
+    <h1 class="text-center my-lg-2">Mūsu picas</h1>
+    <div class="container">
+        <div class="row">
+        @foreach (var item in Model.Products)
+        {
+                <div class="
+              col-12 col-lg-4 col-md-6 col-sm-12
+              item
+              position-relative
+              mx-auto
+              mb-lg-5
+            ">
+                    <a class="card-title" asp-action="ViewProduct" asp-controller="Home" asp-route-id="@item.Id">
+                        <img class="img-fluid" alt="Pizza image" src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image)" />
+                    </a>
+                    <div class="d-flex justify-content-center mb-2">
+                        @switch (item?.Badge?.Name)
+                        {
+                            case "Pikants":
+                                <span class="badge badge-danger badge-right" data-toggle="tooltip" data-placement="right" data-html="true"
+                          title="@item?.Badge?.Description">@item?.Badge?.Name</span>
+                                break;
+                            case "Jaunums":
+                                <span class="badge badge-warning badge-right" data-toggle="tooltip" data-placement="right" data-html="true"
+                          title="@item?.Badge?.Description">@item?.Badge?.Name</span>
+                                break;
+                            case "Iecienītākās":
+                                <span class="badge badge-primary badge-right" data-toggle="tooltip" data-placement="right" data-html="true"
+                          title="@item?.Badge?.Description">@item?.Badge?.Name</span>
+                                break;
+                            case "Veģetāriešu":
+                                <span class="badge badge-success badge-right" data-toggle="tooltip" data-placement="right" data-html="true"
+                          title="@item?.Badge?.Description">@item?.Badge?.Name</span>
+                                break;
+                            case "Akcija":
+                                <span class="badge badge-info badge-right" data-toggle="tooltip" data-placement="right" data-html="true"
+                          title="@item?.Badge?.Description">@item?.Badge?.Name</span>
+                                break;
+                                default:
+                                break;
+                        }
+                    </div>
+                    <h3 class="title text-center">@item.Name</h3>
+                    <p class="text-center">
+                        @if (item?.Badge?.Name == "Akcija")
+                        {
+                            <span class="outer"><span class="text-secondary inner">@item.Price</span></span> <span class="font-weight-bold text-success">
+                                @Math.Round(item.Price - item.Price * 0.15, 2)
+                            </span>  <span class="h2 text-success">€</span>
+                        }else{
+                            <span class="font-weight-bold">@item.Price</span> <span class="h2">€</span>
+                        }
+
+                    </p>
+                </div>
+        }
+        </div>
+            <nav class="padding" aria-label="Page navigation col-12 mt-4">
+                <ul class="pagination justify-content-center">
+                    @if (Model.PageIndex == 1)
+                    {
+                        <li class="page-item disabled">
+                            <a class="page-link">Uz sākumu</a>
+                        </li>
+                        <li class="page-item page-item disabled">
+                            <a class="page-link">Aptkaļ</a>
+                        </li>
+
+                    }
+                    @if (@Model.Products.Count() != 0)
+                    {
+
+                        @if (@Model.PageIndex > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="SetPage"
+                       asp-route-CurrentPage="1">Uz sākumu</a>
+                            </li>
+                        }
+                        @if (Model.PageIndex > 1)
+                        {
+                            var PrevPageBtn = @Model.PageIndex - 1;
+                            <li class="page-item">
+                                <a class="page-link" asp-action="SetPage"
+                       asp-route-CurrentPage="@PrevPageBtn">Atpakaļ</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" asp-action="SetPage"
+                       asp-route-CurrentPage="@PrevPageBtn">@PrevPageBtn</a>
+                            </li>
+                        }
+                        <li class="page-item @(Model.PageIndex == @Model.PageIndex ? "active" : "")">
+                            <a class="page-link" asp-action="SetPage"
+                       asp-route-CurrentPage="@Model.PageIndex">@Model.PageIndex</a>
+                        </li>
+                        @if (@Model.PageIndex < @Model.TotalCount)
+                        {
+                            var NextPage = @Model.PageIndex + 1;
+                            <li class="page-item">
+                                <a class="page-link" asp-action="SetPage"
+                       asp-route-CurrentPage="@NextPage">@NextPage</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" asp-action="SetPage"
+                       asp-route-CurrentPage="@NextPage">Uz priekšu</a>
+                            </li>
+                        }
+                        @if (Model.TotalCount != Model.PageIndex)
+                        {
+
+                            <li class="page-item">
+                                <a class="page-link" asp-action="SetPage"
+                       asp-route-CurrentPage="@Model.TotalCount">Uz beigām</a>
+                            </li>
+                        }
+
+                    }
+                    @if (Model.TotalCount == Model.PageIndex)
+                    {
+                        <li class="page-item disabled">
+                            <a class="page-link">Uz priekšu</a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link">Uz beigām</a>
+                        </li>
+                    }
+
+                </ul>
+            </nav>
+       
+    </div>
+        }else{
+            <h3 class="text-center mt-3">Šeit nekā nav!</h3>
+        }
+</section>

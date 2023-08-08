@@ -1,0 +1,428 @@
+﻿@using System.Globalization
+@model PizzeriaApp.ViewModels.Cart
+<div id="alertContainer"></div>
+<form asp-action="FinilizeOrder" asp-controller="Home">
+    <div class="container-lg container-fluid mt-5 p-3 rounded cart padding" style="background: rgba(0,0,0,0);">
+        <div class="row no-gutters">
+            <div class="col-lg-8 col-md-12">
+                <div class="product-details mr-4">
+                    <div class="d-flex flex-row align-items-center">
+                        <span class="ml-2">Pasūtījuma pārskats</span><span class="ml-auto">
+                            <i class="fa fa-calendar-o mr-1" aria-hidden="true"></i> Izveidots
+                            @{
+                                CultureInfo cultureInfo = new System.Globalization.CultureInfo("lv-LV");
+                                DateTimeFormatInfo dtfi = cultureInfo.DateTimeFormat;
+
+                                dtfi.DayNames = new string[] { "svētdienienā", "pirmdienā", "otrdienā", "trešdienā", "ceturtdienā", "piektdienā", "sestdienā" };
+                                dtfi.MonthGenitiveNames = new string[] { "janvārī", "februārī", "martā", "aprīlī", "maijā", "jūnijā", "jūlijā", "augustā", "septembrī", "oktobrī", "novembrī", "decembrī", "" };
+                            }
+                            @if (Model.UserOrders.Any() || Model.CartCustomPizza.Any())
+                            {
+                                var oldestDate = DateTime.MaxValue;
+                                if (Model.UserOrders.Any())
+                                {
+                                    oldestDate = Model.UserOrders.Min(x => x.CreatedAt);
+                                }
+                                if (Model.CartCustomPizza.Any())
+                                {
+                                    oldestDate = Model.CartCustomPizza.Min(x => x.UserOrders.CreatedAt) < oldestDate ? Model.CartCustomPizza.Min(x => x.UserOrders.CreatedAt) : oldestDate;
+                                }
+                                <span>@oldestDate.ToString("dddd, yyyy'. gada' dd'.' MMMM',' HH:mm",cultureInfo)</span>
+                            }
+                            else
+                            {
+                                <span>-----</span>
+                            }
+
+                        </span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        @{
+                            int totalItemCount = Model.UserOrders.Count() + Model.CartCustomPizza.Count();
+                        }
+                        @if (Model.UserOrders.Any() || Model.CartCustomPizza.Any())
+                        {
+                            <span>Tu esi izvēlējies <span class="item-count">@totalItemCount</span> preces</span>
+                        }
+                    </div>
+                    @if (Model.UserOrders.Any() || Model.CartCustomPizza.Any())
+                    {
+                        if (Model.UserOrders.Any())
+                        {
+                            @foreach (var item in Model.UserOrders)
+                            {
+                                <div id="record-@item.Id" data-price="@item.OrderDetails.Price" class="mt-3 py-1 px-2 items rounded-pill bg-white">
+                                    <div class="d-flex flex-row p-2">
+                                        <img class="img-fluid w-25" src="data:image/jpeg;base64,@Convert.ToBase64String(item.OrderDetails.Products.Image)">
+                                        @{
+                                            double price = item.OrderDetails.Price / item.OrderDetails.Count;
+                                        }
+                                        <div class="ml-2">
+                                            <p class="font-weight-bold d-block mb-1">@item.OrderDetails.Products.Name</p>
+                                            <div class="pl-2 border-top-0 border-right-0 border-bottom-0 border border-dark">
+                                                <p class="spec ml-1">@item.OrderDetails.Size.Name @price €</p>
+                                                <p class="spec"><i class="fa fa-clock-o" aria-hidden="true"></i> Pievienots @item.CreatedAt.ToString("yyyy'. gada' dd'.' MMMM', plkst.' HH:mm",cultureInfo)</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-md-flex align-items-center" data-price="@item.OrderDetails.Price">
+                                            <button class="btn btn-danger" data-record-id="@item.OrderDetails.Id" type="button" onclick="SubtractClick(this)">-</button>
+                                            <span class="d-block mx-2">@item.OrderDetails.Count</span>
+
+                                            <button class="btn btn-success" type="button" data-record-id="@item.OrderDetails.Id" onclick="AddClick(this)">+</button><span class="d-block ml-3 font-weight-light text-nowrap">@item.OrderDetails.Price €</span>
+                                            <a href="" data-toggle="modal" data-target="#confirmDeleteModal" data-record-id="@item.Id" type="submit"><i class="fa fa-trash-o mx-3 text-danger"></i></a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                        if (Model.CartCustomPizza.Any())
+                        {
+                            @foreach (var item in Model.CartCustomPizza)
+                            {
+
+                                @foreach (var eachIteration in item.cartSelectedItems)
+                                {
+                                    <div id="record-@item.UserOrders.Id" data-id="@item.UserOrders.Id" data-price="@eachIteration.orderDetails.Price" class="d-flex justify-content-between align-items-center mt-3 p-2 items bg-white">
+                                        <div class="p-4">
+                                            <span class="font-weight-bold d-block">Jūsu pašizveidotā pica</span>
+                                            <p class="spec ml-2 mb-0 mt-2">Izvēlēti @eachIteration.SelectedItems.Count() indegrienti, <span> @eachIteration.orderDetails.Price €</span></p>
+                                            <p class="spec ml-2 mb-0">Izveidota @item.UserOrders.CreatedAt.ToString("dddd, yyyy'. gada' dd'.' MMMM', plkst.' HH:mm",cultureInfo)</p>
+                                        </div>
+                                        <a href="" data-toggle="modal" data-target="#confirmDeleteModal" data-record-id="@item.UserOrders.Id" type="submit"><i class="fa fa-trash-o mx-3 text-danger"></i></a>
+                                    </div>
+
+                                    <div id="items-@item.UserOrders.Id" class="other-items ml-4 border-top-0 border-right-0 border-bottom-0 border d-none">
+                                        @foreach (var customProductItem in eachIteration.SelectedItems)
+                                        {
+                                            <div id="record-@eachIteration.orderDetails.Id" data-price="@customProductItem.Price" class="d-flex justify-content-between align-items-center mt-3 ml-3 p-2 rounded-pill bg-white">
+                                                <div class="d-flex flex-row">
+                                                    <img class="img-fluid w-25" src="data:image/jpeg;base64,@Convert.ToBase64String(customProductItem.ImageSrc)">
+                                                    <div class="ml-2">
+                                                        <span class="font-weight-bold d-block">@customProductItem.Name</span><span class="spec"> @customProductItem.Description</span>
+                                                        <p class="spec">Skaits: @customProductItem.Quantity</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            }
+                        }
+                        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Apstiprināt Dzēšanu</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Vai tiešām vēlaties dzēst šo ierakstu?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nē</button>
+                                        <button type="button" class="btn btn-primary" id="confirmDeleteButton">Jā</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="ml-2">Pievienojat grozam jaunus produktus</span>
+                    }
+
+
+                </div>
+            </div>
+            @if (Model.UserOrders.Any() || Model.CartCustomPizza.Any())
+            {
+
+                <div class="col-lg-4 mt-5 pl-4">
+                    <div class="payment-info">
+
+                        <div class="d-flex justify-content-between align-items-center"><span>Kredītkartes informācija</span></div><span class="type d-block mt-3 mb-1">Izvēlaties Kredītkartes tipu</span><label class="radio"> <input type="radio" name="card" value="payment" checked> <span><img width="30" src="https://img.icons8.com/color/48/000000/mastercard.png" /></span> </label>
+                        <label class="radio"> <input type="radio" name="card" value="payment"> <span><img width="30" src="https://img.icons8.com/officel/48/000000/visa.png" /></span> </label>
+                        <label class="radio"> <input type="radio" name="card" value="payment"> <span><img width="30" src="https://img.icons8.com/ultraviolet/48/000000/amex.png" /></span> </label>
+                        <label class="radio"> <input type="radio" name="card" value="payment"> <span><img width="30" src="https://img.icons8.com/officel/48/000000/paypal.png" /></span> </label>
+                        <div>
+                            <label id="nameOnCardLabel" class="credit-card-label">Vārds uz kredītkartes</label>
+                            <input id="nameOnCardInput" type="text" class="form-control credit-inputs" placeholder="DAINIS STRAUTINS">
+                        </div>
+                        <div>
+                            <label id="creditCardNumberLabel" class="credit-card-label">Kredītkartes numurs</label>
+                            <input id="creditCardNumberInput" type="text" class="form-control credit-inputs" placeholder="0000 0000 0000 0000">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label id="validUntilLabel"  class="credit-card-label">Derīguma termiņš</label>
+                                <input id="validUntilInput" type="text" class="form-control credit-inputs" placeholder="12/24">
+                            </div>
+                            <div  class="col-md-6">
+                                <label id="cvv2Label" class="credit-card-label">CVV2</label>
+                                <input id="cvv2Input" type="text" class="form-control credit-inputs" placeholder="342">
+                            </div>
+                        </div>
+                        <hr class="line">
+                        <div class="d-flex justify-content-between align-items-center"><span>Piegādes informācija</span></div>
+                        <label class="credit-card-label mt-2">Piegādes tips</label>
+                        <select id="DeliveryTypes" class="form-control credit-inputs" asp-for="DeliveryTypes" required>
+                            @foreach (var item in Model.DeliveryTypes)
+                            {
+                                <option value="@item.Id">@item.Name - @item.Price €</option>
+                            }
+                        </select>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label id="contactNameLabel"  class="credit-card-label">Norādiet saņēmēja vārdu</label>
+                                <input id="contactNameInput" type="text" asp-for="ContactName" class="form-control credit-inputs" placeholder="Juris Bērziņš">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label id="contactPhoneLabel" class="credit-card-label">Norādiet telefona numuru</label>
+                                <input id="contactPhoneInput" type="text" asp-for="ContactPhone" class="form-control credit-inputs" placeholder="25416891">
+                            </div>
+                        </div>
+                        <div class="delivery-inforamtion">
+                            <label id="addressLabel" class="credit-card-label">Norādiet savu adresi</label>
+                            <input id="addressInput" type="text" asp-for="DeliveryAddress" class="form-control credit-inputs" placeholder="Lielā iela 2, Jelgava...">
+                            <label class="credit-card-label">Norādiet papildus informāciju kurjeram</label>
+                            <input type="text" asp-for="Instructions" class="form-control credit-inputs" placeholder="Papildus informācija (atstājiet pasūtījumu pie durvīm)">
+
+                        </div>
+
+
+                        <hr class="line">
+
+                        @{
+
+                            double withDelivery = ViewBag.TotalPrice + Model.DeliveryTypes.First().Price;
+                        }
+                        <div class="d-flex justify-content-between information"><span>Starpsumma</span><span id="total-cost">@ViewBag.TotalPrice €</span></div>
+                        <div class="d-flex justify-content-between information"><span>Piegāde</span><span id="delivery-cost"> @Model.DeliveryTypes.First().Price €</span></div>
+                        <div class="d-flex justify-content-between information"><span>Kopā(Ieskaitot. nodokļus un piegādi)</span><span id="with-delivery">@withDelivery €</span></div>
+                        <button class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="submit"><span id="pay-button">@withDelivery €</span><span>Samaksāt</span></button>
+                        <input type="hidden" id="TotalCost" asp-for="TotalCost" value="">
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</form>
+@if (Model.UserOrders.Any() || Model.CartCustomPizza.Any())
+{
+    @section Scripts {
+    <script>
+        const deliveryType = document.getElementById("DeliveryTypes");
+        const deliveryCost = document.getElementById("delivery-cost");
+        const totalCost = document.getElementById("total-cost");
+        const withDelivery = document.getElementById("with-delivery");
+        const payButton = document.getElementById("pay-button");
+        const deliveryInformation = document.querySelector(".delivery-inforamtion");
+
+        deliveryType.addEventListener("change", function () {
+            const selectedOption = deliveryType.options[deliveryType.selectedIndex];
+            const deliveryPrice = parseFloat(selectedOption.text.split(" - ")[1]);
+            deliveryCost.innerHTML = deliveryPrice + " €";
+            const total = parseFloat(totalCost.innerHTML.split(" ")[0]) + deliveryPrice;
+            withDelivery.innerHTML = total + " €";
+            payButton.innerHTML = total + " €";
+            // Get the selected value
+            const selectedValue = deliveryType.value;
+
+            // Check if the selected value is "2"
+            if (selectedValue === "2") {
+                // Show the "delivery-information" div
+                deliveryInformation.style.display = "block";
+            } else {
+                // Hide the "delivery-information" div
+                deliveryInformation.style.display = "none";
+            }
+        });
+        function updateCountInDB(itemId, newCount, newItemPrice) {
+            // Send an AJAX request to update the count in the database
+            $.ajax({
+                url: '/Home/updateRecordInformation', // replace with the appropriate URL for your controller action
+                type: 'POST',
+                data: { itemId: itemId, newCount: newCount, newItemPrice: newItemPrice },
+                success: function (response) {
+                    console.log('Count successfully updated in the database.');
+                },
+                error: function (error) {
+                    console.log('Error updating count in the database:', error);
+                }
+            });
+        }
+        $(document).ready(function () {
+            $(document).on('click', '.items', function (event) {
+                if (event.target.tagName !== 'I') {
+                    // Find the closest parent div with the items class
+                    var itemDiv = $(event.target).closest('.items');
+
+                    // Get the id of the item div
+                    var itemId = itemDiv.data('id');
+
+                    // Find the div with the other-items class and the matching id
+                    var otherItemsDiv = $('#items-' + itemId);
+
+                    // Check if the other-items div has the d-none class
+                    if (otherItemsDiv.hasClass('d-none')) {
+                        // Remove the d-none class and smoothly fade in the other-items div
+                        otherItemsDiv.removeClass('d-none').hide().fadeIn(300);
+                    } else {
+                        // Add the d-none class and smoothly fade out the other-items div
+                        otherItemsDiv.addClass('d-none').fadeOut(300);
+                    }
+                }
+
+            });
+
+            // When the modal is shown
+            $('#confirmDeleteModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var recordId = button.data('record-id'); // Extract info from data-* attributes
+
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                modal.find('.modal-body #confirmDeleteButton').data('record-id', recordId);
+                var itemDiv = button.closest('.items');
+                // Get the price of the item div
+                var itemPrice = itemDiv.data('price');
+                console.log(recordId, itemDiv, itemPrice)
+                // Set the click event listener for the confirm delete button
+                $('#confirmDeleteButton').click(function () {
+                    // Use the recordId value from the modal
+                    console.log(recordId); // Output the value of the data-record-id attribute
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Home/Remove/' + recordId,
+                        success: function (result) {
+                            if (result.success) {
+                                $('#record-' + recordId).fadeOut(500, function () {
+                                    // Update the total cost
+                                    updateTotalCostWhenRemoved(itemPrice);
+                                    $(this).remove();
+
+                                    var itemCount = $('.item-count').text();
+                                    itemCount--;
+                                    $('.item-count').text(itemCount);
+                                    if (itemCount == 0) {
+                                        setTimeout(function () { location.reload(); }, 1000);
+                                    }
+                                });
+                                $('#alertContainer').html('<div class="alert alert-success" role="alert">Produkts noņemts!</div>');
+
+                            } else {
+                                $('#alertContainer').html('<div class="alert alert-danger" role="alert">Produkts netika noņemts!</div>');
+                            }
+                            $('#alertContainer').fadeOut(3000);
+                            // Hide the modal after the AJAX request is complete
+                            $('#confirmDeleteModal').modal('hide');
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                        }
+                    });
+                });
+            });
+        });
+        function AddClick(element) {
+            // Get the current count of the element
+            var currentCount = parseInt($(element).prev().text());
+            // Increment the count by 1
+            var newCount = currentCount + 1;
+            // Update the count display
+            $(element).prev().text(newCount);
+            if (newCount >= 50) {
+                newCount = newCount - 1;
+                console.log(newCount > 50);
+                return;
+            }
+            // Get the original price of the product
+            var price = parseFloat($(element).parent().data('price'));
+
+            // Calculate the new price for the item
+            var PricePerOne = (price / currentCount).toFixed(2);
+
+            var newItemPrice = (PricePerOne * newCount).toFixed(2);
+
+            $(element).parent().data('price', newItemPrice);
+            // Update the price display
+            $(element).parent().find('.d-block.ml-3.font-weight-light.text-nowrap').text(newItemPrice + ' €');
+
+            // Update the total cost display
+            var itemId = $(element).data("record-id");
+            updateTotalCost(PricePerOne);
+            updateCountInDB(itemId, newCount, newItemPrice);
+
+        }
+
+        function SubtractClick(element) {
+            // Get the current count of the element
+            var currentCount = parseInt($(element).next().text());
+            var newCount = currentCount - 1;
+            if (newCount < 1) {
+                newCount = 1;
+                return;
+            }
+            // Update the count display
+            $(element).next().text(newCount);
+
+            // Get the original price of the product
+            var price = parseFloat($(element).parent().data('price'));
+
+            // Calculate the new price for the item
+            var PricePerOne = parseFloat((price / currentCount).toFixed(2));
+
+            var newItemPrice = parseFloat((PricePerOne * newCount).toFixed(2));
+            $(element).parent().data('price', newItemPrice);
+
+            // Update the price display
+            $(element).parent().find('.d-block.ml-3.font-weight-light.text-nowrap').text(newItemPrice + ' €');
+            // Update the total cost display
+            updateTotalCost(PricePerOne * (-1));
+            var itemId = $(element).data("record-id");
+            updateCountInDB(itemId, newCount, newItemPrice);
+        }
+        function updateTotalCost(newTotalCost) {
+            // Get the current total cost
+            var currentTotalCost = parseFloat($('#total-cost').text());
+            // Get the selected delivery price
+            var deliveryCost = parseFloat($('#delivery-cost').text());
+            // Calculate the new total cost by adding the item's new total cost to the current total cost
+            var updatedTotalCost = (currentTotalCost + parseFloat(newTotalCost)).toFixed(2);
+            // Update the total cost display
+            $('#total-cost').text(updatedTotalCost);
+            // Update the "Kopā(Ieskaitot. nodokļus)" display
+            $('#with-delivery').text((parseFloat(updatedTotalCost) + deliveryCost).toFixed(2));
+            // Update the button text
+            $('#pay-button').text((parseFloat(updatedTotalCost) + deliveryCost).toFixed(2) + ' €');
+            $('#TotalCost').val((parseFloat(updatedTotalCost) + deliveryCost).toFixed(2));
+        }
+
+        function updateTotalCostWhenRemoved(newTotalCost) {
+            // Get the current total cost
+            var currentTotalCost = parseFloat($('#total-cost').text());
+            // Get the selected delivery price
+            var deliveryCost = parseFloat($('#delivery-cost').text());
+            // Calculate the new total cost by adding the item's new total cost to the current total cost
+            var updatedTotalCost = (currentTotalCost + parseFloat(newTotalCost)).toFixed(2);
+            // Update the total cost display
+            $('#total-cost').text(updatedTotalCost);
+            // Update the "Kopā(Ieskaitot. nodokļus)" display
+            $('#with-delivery').text((parseFloat(updatedTotalCost) + deliveryCost).toFixed(2));
+            // Update the button text
+            $('#pay-button').text((parseFloat(updatedTotalCost) + deliveryCost).toFixed(2) + ' €');
+            $('#TotalCost').val((parseFloat(updatedTotalCost) + deliveryCost).toFixed(2));
+        }
+        document.querySelector("form").addEventListener("submit", function (event) {
+            console.log("Form submitted!");
+        });
+    </script>
+    <script src="~/js/CartValidation.js"></script>
+}
+}

@@ -1,0 +1,345 @@
+﻿@model PizzeriaApp.ViewModels.ViewCustomProduct
+@{
+    ViewData["Title"] = "Custom Pizza Page";
+}
+<div id="alertContainer"></div>
+<form asp-action="CreateCustomPizza">
+    <div class="container mt-5 cart px-0">
+        <div class="row no-gutters">
+            <div class="col-md-8 pr-lg-4 mx-auto">
+                <div class="product-details mr-lg-4 mx-3">
+                    <hr>
+                    <h6 class="mb-0">Tu izvēlējies</h6>
+                    <div class="d-flex flex-row align-items-center">
+                        <span>Izvēlētie produkti: <span class="item-count">0</span></span>
+                    </div>
+                    <div class="cart-items">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-4 mx-sm-2 mx-lg-0 mx-md-0 mx-2">
+                <h3>Pasūtījums</h3>
+                <div class="d-flex justify-content-between information">
+                    <span>Kopā</span><span class="cart-total-price">
+                        0 €
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between information">
+                    <span>Pagatavošanas samaksa</span><span>2.00 €</span>
+                </div>
+                <div class="d-flex justify-content-between information">
+                    <span>Nodoklis</span><span class="cart-total-tax">
+                        0 €
+                    </span>
+                </div>
+                <div class="d-flex justify-content-between information">
+                    <span>
+                        Kopējā summa(Ieskaitot pagatvošanu un
+                        nodokļus)
+                    </span><span class="text-nowrap total-price-combined">2.00 €</span>
+                </div>
+                <button type="submit"
+                        class="btn btn-primary btn-block d-flex justify-content-between mt-3 btn-submit">
+                    <span class="total-price-combined-btn">
+                        2.00 €
+                    </span><span>Pievienot grozam</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="col-8 mx-auto my-1"><hr></div>
+<section class="pt-0 padding" id="pizzas">
+    <div class="container-fluid">
+        <h1 class="text-center my-lg-5">Izmērs</h1>
+        <div class="row">
+            @foreach (var item in Model.Dough)
+            {
+                <div class="col-12 col-lg-4 col-md-4 col-sm-4 block pizza-size-item-button">
+                    <img class="img-fluid cart-item-image" src="data:image/jpeg;base64,@Convert.ToBase64String(@item.Image)">
+                    <p class="text-center mt-2 cart-item-title">@item.Name</p>
+                    <p>
+                        <span class="d-block mx-auto font-weight-200"><span class="cart-item-description">@item.Description </span><span class="cart-item-price">@String.Format("{0:0.00}",item.Price) €</span></span>
+                    </p>
+                    <button class="btn btn-primary cart-item-button" data-dough="@item.Category.Name">Pievieno grozam</button>
+                    <input asp-for="Dough" type="hidden" class="form-control item-id" value="@item.Id" />
+                </div>
+            }
+
+        </div>
+        <hr>
+        <h1 class="text-center my-lg-5">Mērce</h1>
+        <div class="row">
+            @foreach (var item in Model.Sauce)
+            {
+                <div class="col-12 col-lg-4 col-md-4 col-sm-4 block">
+                    <img class="img-fluid cart-item-image" src="data:image/jpeg;base64,@Convert.ToBase64String(@item.Image)">
+                    <p class="text-center mt-2 cart-item-title">@item.Name</p>
+                    <p>
+                        <span class="d-block mx-auto font-weight-200">
+                            <span class="cart-item-description">@item.Description</span> <span class="cart-item-price">@String.Format("{0:0.00}",item.Price) €</span>
+                        </span>
+                    </p>
+                    <button class="btn btn-primary cart-item-button">Pievieno grozam</button>
+                    <input asp-for="Sauce" type="hidden" class="form-control item-id" value="@item.Id" />
+                </div>
+            }
+
+        </div>
+        <hr>
+        <h1 class="text-center my-lg-5">Siers</h1>
+        <div class="row">
+            @foreach (var item in Model.Cheese)
+            {
+                <div class="col-12 col-lg-4 col-md-4 col-sm-6 block">
+                    <img class="img-fluid cart-item-image" src="data:image/jpeg;base64,@Convert.ToBase64String(@item.Image)">
+                    <p class="text-center mt-2 cart-item-title">@item.Name</p>
+                    <p>
+                        <span class="d-block mx-auto font-weight-200">
+                            <span class="cart-item-description">@item.Description</span> <span class="cart-item-price">@String.Format("{0:0.00}",item.Price) €</span>
+                        </span>
+                    </p>
+                    <button class="btn btn-primary cart-item-button">Pievieno grozam</button>
+                    <input asp-for="Cheese" type="hidden" class="form-control item-id" value="@item.Id" />
+                </div>
+            }
+        </div>
+        <hr>
+        <h1 class="text-center my-lg-5">Piedevas</h1>
+        <div class="row">
+            @foreach (var item in Model.Toppings)
+            {
+                <div class="col-12 col-lg-3 col-md-4 col-sm-6 block mx-auto">
+                    <img class="img-fluid cart-item-image" src="data:image/jpeg;base64,@Convert.ToBase64String(@item.Image)">
+                    <p class="text-center mt-2 cart-item-title">@item.Name</p>
+                    <p>
+                        <span class="d-block mx-auto font-weight-200">
+                            <span class="cart-item-description">@item.Description</span> <span class="cart-item-price">@String.Format("{0:0.00}",item.Price) €</span>
+                        </span>
+                    </p>
+                    <button class="btn btn-primary cart-item-button">Pievieno grozam</button>
+                    <input asp-for="Toppings" type="hidden" class="form-control item-id" value="@item.Id" />
+                </div>
+            }
+        </div>
+    </div>
+</section>
+@section Scripts{
+    <script type="text/javascript">
+        if (document.readyState == 'loading') {
+            document.addEventListener('DOMContentLoaded', ready)
+        } else {
+            ready()
+        }
+        var doughCount = 0;
+        var itemCount = 0;
+        function ready() {
+            var removeCartItemButtons = document.getElementsByClassName('btn-delete')
+            for (var i = 0; i < removeCartItemButtons.length; i++) {
+                var button = removeCartItemButtons[i]
+                button.addEventListener('click', removeCartItem)
+            }
+
+            var quantityInputs = document.getElementsByClassName('cart-quantity-input')
+            for (var i = 0; i < quantityInputs.length; i++) {
+                var input = quantityInputs[i]
+                input.addEventListener('change', quantityChanged)
+            }
+
+            var addToCartButtons = document.getElementsByClassName('cart-item-button')
+            for (var i = 0; i < addToCartButtons.length; i++) {
+                var button = addToCartButtons[i]
+                button.addEventListener('click', addToCartClicked)
+            }
+
+            document.getElementsByClassName('btn-submit')[0].addEventListener('click', purchaseClicked)
+        }
+        function addToCartClicked() {
+            var button = event.target
+            var shopItem = button.parentElement
+
+            var title = shopItem.getElementsByClassName('cart-item-title')[0].innerText
+            var price = shopItem.getElementsByClassName('cart-item-price')[0].innerText
+            var description = shopItem.getElementsByClassName('cart-item-description')[0].innerText
+            var imageSrc = shopItem.getElementsByClassName('cart-item-image')[0].src
+            var id = shopItem.getElementsByClassName('item-id')[0].value
+            var doughCategory = button.getAttribute('data-dough');
+            addItemToCart(title, price, imageSrc, description, id, doughCategory)
+            updateCartTotal()
+        }
+            function addItemToCart(title, price, imageSrc, description, id, doughCategory) {
+                var cartRow = document.createElement('div')
+                cartRow.classList.add('cart-row')
+                var cartItems = document.getElementsByClassName('cart-items')[0]
+                var cartItemNames = cartItems.getElementsByClassName('cart-item-title')
+                var cartItemsDough = cartItems.getElementsByClassName('cart-item-dough')
+                console.log(document.getElementsByClassName('cart-items'));
+                console.log(cartItemNames.length, doughCategory == "Dough");
+
+
+                for (var i = 0; i < cartItemNames.length; i++) {
+                    if (cartItemNames[i].innerText == title) {
+                        alert("Šī prece jau ir izvēlēta vienreiz")
+                        return
+                    }
+                }
+                var cartRowContents
+                if (doughCategory == "Dough" && doughCount == 0) {
+                    doughCount++
+                    cartRowContents =
+                        `
+                                <div class="d-flex justify-content-between align-items-center mt-3 p-2 items cart-item">
+                                  <div class="d-flex flex-row"><img class="img-fluid w-25 cart-item-image" src="${imageSrc}">
+                                                    <div class="ml-2"><span class="font-weight-bold d-block cart-item-title">${title}</span>
+                                            <span class="cart-item-description spec">
+                                    <span>${description}</span><span
+                                    class="cart-item-price"> ${price}</span>
+                                    </span>
+
+                                    </div>
+                                  </div>
+                                                  <div class="d-flex flex-row align-items-center invisible">
+                                    <input class="form-control-custom mx-1 text-center d-block mx-2 cart-quantity-input" type="number" disabled
+                                      name="number" id="clicks" value="1" min="1" max="50" oninput="this.value = Math.abs(this.value)"/>
+                                  </div>
+                                  <button class="btn btn-danger btn-delete" type="button"><i class="fa fa-trash"
+                                      aria-hidden="true"></i></button>
+                                </div>
+                                         <input name="Product" id="Product" type="hidden" class="form-control item-id" value="${id}" />
+                                                 <span class="invisible cart-item-dough">${doughCategory}</span>
+                                `
+                } else if (doughCategory != "Dough") {
+                    cartRowContents =
+                        `
+                                <div class="d-flex justify-content-between align-items-center mt-3 p-2 items cart-item">
+                                  <div class="d-flex flex-row"><img class="img-fluid w-25 cart-item-image" src="${imageSrc}">
+                                            <div class="ml-2"><span class="font-weight-bold d-block cart-item-title">${title}</span>
+                                            <span class="cart-item-description spec">
+                                    <span>${description}</span><span
+                                    class="cart-item-price"> ${price}</span>
+                                    </span>
+                                    </div>
+                                  </div>
+                                  <div class="d-flex flex-row align-items-center">
+                                    <input class="form-control-custom mx-1 text-center d-block mx-2 cart-quantity-input" type="number"
+                                      name="number" id="clicks" value="1" min="1" max="50" oninput="this.value = Math.abs(this.value)" />
+                                  </div>
+                                  <button class="btn btn-danger btn-delete" type="button"><i class="fa fa-trash"
+                                      aria-hidden="true"></i></button>
+                                </div>
+                                         <input name="Product" id="Product" type="hidden" class="form-control item-id" value="${id}" />
+                                `
+                } else {
+                    alert("Var izvelēties tikai vienu picas izmēru")
+                    return
+                }
+                itemCount++
+                cartRow.innerHTML = cartRowContents
+                cartItems.append(cartRow)
+                cartRow.getElementsByClassName('btn-delete')[0].addEventListener('click', removeCartItem)
+                cartRow.getElementsByClassName('cart-quantity-input')[0].addEventListener('change', quantityChanged)
+            }
+        function quantityChanged(event) {
+            var input = event.target
+            if (isNaN(input.value) || input.value <= 0) {
+                input.value = 1
+            } else if (input.value > 50) {
+                input.value = 50
+            }
+            updateCartTotal()
+        }
+        function purchaseClicked() {
+            var cartItems = document.getElementsByClassName('cart-items')[0]
+            itemCount = 0;
+            doughCount = 0;
+            while (cartItems.hasChildNodes()) {
+                cartItems.removeChild(cartItems.firstChild)
+            }
+            updateCartTotal()
+        }
+
+        function removeCartItem(event) {
+            var buttonclicked = event.target;
+            buttonclicked.parentElement.parentElement.remove();
+            itemCount--
+            doughCount--
+            updateCartTotal();
+        }
+        function updateCartTotal() {
+            var cartItemContainer = document.getElementsByClassName('cart-items')[0]
+            var cartRows = cartItemContainer.getElementsByClassName('cart-row')
+            var total = 0
+            var fee = 0.21;
+            for (var i = 0; i < cartRows.length; i++) {
+                var cartRow = cartRows[i]
+                var priceElement = cartRow.getElementsByClassName('cart-item-price')[0]
+                var quantityElement = cartRow.getElementsByClassName('cart-quantity-input')[0]
+                var price
+                var quantity
+                var cartItemTotalPrice
+                if (priceElement == undefined || quantityElement == undefined) {
+                    price = 0
+                    quantity = 0
+                    cartItemTotalPrice = 0
+                } else {
+                    price = parseFloat(priceElement.innerText.replace('€', ''))
+                    quantity = quantityElement.value
+                    cartItemTotalPrice = price * quantity
+                    total = total + (cartItemTotalPrice)
+                }
+            }
+            total = (Math.round(total * 100) / 100).toFixed(2)
+            var cartTotalTax = total * fee
+            var summAll = (parseFloat(cartTotalTax) + parseFloat(total) + parseFloat(2))
+            document.getElementsByClassName('item-count')[0].innerText = i
+            document.getElementsByClassName('cart-total-tax')[0].innerText = cartTotalTax.toFixed(2) + ' €'
+            document.getElementsByClassName('cart-total-price')[0].innerText = total + ' €'
+            document.getElementsByClassName('total-price-combined')[0].innerText = summAll.toFixed(2) + ' €'
+            document.getElementsByClassName('total-price-combined-btn')[0].innerText = summAll.toFixed(2) + ' €'
+        }
+        $('.btn-submit').on('click', function (e) {
+            e.preventDefault();
+
+            // Get the selected items
+            var selectedItems = [];
+            $('.cart-items .cart-item').each(function () {
+                // Retrieve the image source
+                var imageSrc = $(this).find('.cart-item-image').attr('src');
+                // Remove the data URI prefix
+                imageSrc = imageSrc.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+                var item = {
+                    name: $(this).find('.cart-item-title').text(),
+                    description: $(this).find('.cart-item-description').text().replace('\n                ', '').replace('\n                ', ''),
+                    price: $(this).find('.cart-item-price').text().replace(' ', '').replace(' €', ''),
+                    quantity: $(this).find('.cart-quantity-input').val(),
+                    imageSrc: imageSrc
+                };
+                selectedItems.push(item);
+            });
+            console.log(JSON.stringify(selectedItems));
+            if (selectedItems.length === 0) {
+                // Display an error message in the alertContainer
+                $('#alertContainer').html('<div class="alert alert-danger" role="alert">Pievienojiet produktus!</div>');
+                $('#alertContainer').fadeOut(3000);
+                return;  // exit the function early
+            }
+            // Send the selected items to the server-side code using an AJAX request
+            $.ajax({
+                url: '/Home/CreateCustomPizza',
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedItems),
+                success: function (result) {
+                    if (result.success) {
+                        $('#alertContainer').html('<div class="alert alert-success" role="alert">Pasūtījums izveidots!</div>');
+                    } else {
+                        $('#alertContainer').html('<div class="alert alert-danger" role="alert">Pasūtījums netika izveidots!</div>');
+                    }
+                    $('#alertContainer').fadeOut(3000);
+                }
+            });
+        });
+
+    </script>
+}

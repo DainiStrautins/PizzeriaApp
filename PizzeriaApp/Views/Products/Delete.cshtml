@@ -1,0 +1,64 @@
+﻿@model PizzeriaApp.Models.Product
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<h1>Dzēšana</h1>
+
+<h3>Vai tiešām vēlaties dzēst šo ierakstu?</h3>
+<div>
+    <h4>Produkts</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Nosaukums
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            Apraksts
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            Cena
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class = "col-sm-2">
+            Bilde
+        </dt>
+        <dd class = "col-sm-10">
+            <img class="img-fluid" style="width:125px; height:100px; object-fit:cover" src="data:image/jpeg;base64,@Convert.ToBase64String(@Model.Image)">
+        </dd>
+        <dt class = "col-sm-2">
+            Kategorija
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Category.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            Žetons
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Badge.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Atlaides koeficents
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Multiplier)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Dzēst" class="btn btn-danger" /> |
+        <a asp-action="Index">Atpakaļ uz sarakstu</a>
+    </form>
+</div>

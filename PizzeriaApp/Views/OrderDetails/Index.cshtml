@@ -1,0 +1,135 @@
+﻿@model PizzeriaApp.ViewModels.OrderDetailsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+}
+
+    <p>
+        <a asp-action="Create">Izveidot jaunu pasūtījuma detaļas</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Produkts
+                </th>
+                <th>
+                    Izmērs
+                </th>
+                <th>
+                    Pasūtījuma cena
+                </th>
+                <th>
+                    Skaits
+                </th>
+                <th>
+                    Veido Pats
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.orderDetails)
+        {
+            if (item.Recipe == null)
+            {
+                <tr>
+                    <td>
+                        <p>@item.Products.Name</p>
+                        <img class="img-fluid" style="width:125px; height:100px; object-fit:cover" src="data:image/jpeg;base64,@Convert.ToBase64String(item.Products.Image)">
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Size.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Count)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Recipe)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Rediģēt</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Dzēst</a>
+                    </td>
+                </tr>
+            }
+        }
+        @foreach (var item in Model.orderDetailsCustom)
+        {
+
+            @foreach (var orderDetails in item.cartSelectedItems)
+            {
+                <tr>
+                    <td>
+                        Tukšs
+                    </td>
+                    <td>
+                        Tukšs
+                    </td>
+                    <td>
+                        @orderDetails.orderDetails.Price
+                    </td>
+                    <td>
+                        @orderDetails.SelectedItems.Count()
+                    </td>
+                    <td data-id="@orderDetails.orderDetails.Id">
+                        <span class="items">
+                            Nospied te lai apskatītu vairāk
+                        </span>
+                        
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@orderDetails.orderDetails.Id">Rediģēt</a> |
+                        <a asp-action="Delete" asp-route-id="@orderDetails.orderDetails.Id">Dzēst</a>
+                    </td>
+                    
+                </tr>
+                @foreach (var customItem in orderDetails.SelectedItems)
+                    {
+                        <tr class="other-items d-none" data-id="@orderDetails.orderDetails.Id">
+                            <td>
+                                <p>@customItem.Name</p>
+                            </td>
+                            <td>
+                            <img class="img-fluid" style="width:125px; height:100px; object-fit:cover" src="data:image/jpeg;base64,@Convert.ToBase64String(customItem.ImageSrc)">
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => customItem.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => customItem.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => customItem.Quantity)
+                            </td>
+                            <td></td>
+                        </tr>
+
+
+                    }
+
+            }
+        }
+
+    </tbody>
+</table>
+
+<script>
+
+    document.querySelectorAll("td[data-id]").forEach(function(el) {
+        el.addEventListener("click", function() {
+            var dataId = this.getAttribute("data-id");
+            var otherItems = document.querySelectorAll("tr.other-items[data-id='" + dataId + "']");
+            console.log(otherItems);
+            otherItems.forEach(function(item) {
+                item.classList.toggle("d-none");
+                console.log(item.classList)
+            });
+        });
+    });
+</script>

@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item">
+        <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> 
+            @UserManager.GetUserAsync(User).Result.Name
+                <i class="fa fa-user" aria-hidden="true"></i>
+        </a>
+            
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link" id="login" asp-area="Identity" asp-page="/Account/Login">Pieslēgties</a>
+    </li>
+}
+</ul>

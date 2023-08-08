@@ -1,0 +1,61 @@
+﻿@model PizzeriaApp.Models.Product
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_LayoutBackend.cshtml";
+}
+
+<h1>Papildus informācija</h1>
+
+<div>
+    <h4>Produkts</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Nosaukums
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            Apraksts
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            Cena
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class = "col-sm-2">
+            Bilde
+        </dt>
+        <dd class = "col-sm-10">
+            <img class="img-fluid" style="width:125px; height:100px; object-fit:cover" src="data:image/jpeg;base64,@Convert.ToBase64String(@Model.Image)">
+        </dd>
+        <dt class = "col-sm-2">
+            Kategorija
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Category.Id)
+        </dd>
+        <dt class = "col-sm-2">
+            Žetons
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Badge.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Atlaides koeficents
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Multiplier)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Rediģēt</a> |
+    <a asp-action="Index">Atpakaļ uz sarakstu</a>
+</div>

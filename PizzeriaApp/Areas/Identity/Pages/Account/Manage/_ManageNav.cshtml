@@ -1,0 +1,38 @@
+﻿@using PizzeriaApp.Models.ValueModels
+@inject SignInManager<User> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+<ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">
+            <i class="fa fa-user p-1" aria-hidden="true"></i>
+            Pasūtījumi
+        </a>
+    </li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">
+            <i class="fa fa-envelope p-1" aria-hidden="true"></i>
+        Nomainīt/verificēt epastu
+        </a>
+    </li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">
+            <i class="fa fa-unlock-alt p-1" aria-hidden="true"></i>
+        Nomainīt paroli
+        </a>
+    </li>
+    @if (User.IsInRole(UserRoles.Admin))
+    {
+        <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-action="Index" asp-controller="Products">
+                <i class="fa fa-user-secret p-1" aria-hidden="true"></i>
+
+                Administrācijas panels</a></li>
+    }
+    @{
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+            <li class="nav-item mt-2">
+            <button type="submit" class="btn btn-primary nav-link"> Izrakstīties</button>
+            </li>
+        </form>
+    }
+
+</ul>

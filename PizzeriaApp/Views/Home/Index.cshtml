@@ -1,0 +1,132 @@
+﻿@model PizzeriaApp.ViewModels.IndexViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="screen-height">
+    <section class="page-header gradient" id="main">
+        <div class="container py-3">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-6 text-center">
+                    <h2 class="display-4 quick-sand">Picērija</h2>
+                    <p>
+                        Lapini lūgti mūsu picērijas mājaslapā, nāc un apskati mūsu produkciju. Mūsu produkcija ir ļoti plaša.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <img src="images/header_image.png" alt="Header image"
+                         class="img-fluid rounded-sm mx-auto responsive-image">
+                </div>
+            </div>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+            <path fill="#f2f6fb" fill-opacity="1"
+                  d="M0,128L48,133.3C96,139,192,149,288,138.7C384,128,480,96,576,101.3C672,107,768,149,864,176C960,203,1056,213,1152,202.7C1248,192,1344,160,1392,144L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+            </path>
+        </svg>
+    </section>
+    <section id="section07" class="demo">
+        <a href="#anchor" id="animate">
+            <span></span><span></span><span></span>
+            <p>Vairāk</p>
+        </a>
+    </section>
+</div>
+<section class="page-header gradient2 dark-text" id="pizzas">
+    <div class="top-content mt-5">
+        <h1 class="text-center pt-5 quick-sand" id="anchor">Mūsu picas</h1>
+        <div class="container-fluid mx-auto">
+            <div id="carousel-example" class="carousel slide align-items-center" data-ride="carousel" data-interval="2500">
+                <div class="carousel-inner row w-100 mx-auto" role="listbox">
+                    @foreach (var item in Model.Pizza.Select((value, i) => ( value, i )))
+                    {
+                        <div class="carousel-item mt-4 col-12 col-sm-6 col-md-4 col-lg-4 @(item.i == 1 ? "active" : "") dark-text">
+                            <a class="card-title" asp-action="ViewProduct" asp-controller="Home" asp-route-id="@item.value.Id">
+                                <img class="img-fluid mx-auto d-block" src="data:image/jpeg;base64,@Convert.ToBase64String(item.value.Image)">
+                                <div class="carousel-caption pb-0 position-relative dark-text mx-auto">
+                                    <p>@item.value.Name</p>
+                                    <p>€@item.value.Price</p>
+                                </div>
+                            </a>
+                        </div>
+                    }
+
+                </div>
+                <a class="carousel-control-prev" href="#carousel-example" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Aptkaļ</span>
+                </a>
+                <a class="carousel-control-next" href="#carousel-example" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+        <path fill="#f2f6fb" fill-opacity="1"
+              d="M0,288L48,288C96,288,192,288,288,282.7C384,277,480,267,576,272C672,277,768,299,864,309.3C960,320,1056,320,1152,314.7C1248,309,1344,299,1392,293.3L1440,288L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
+        </path>
+    </svg>
+</section>
+<section id="more">
+    <div class="container-fluid my-5">
+        <div class="row">
+            @foreach (var item in Model.Snacks)
+            {
+                switch (item.Category.Name)
+                {
+                    case "Burgeri":
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 my-2 mx-auto bg-purplish-hover">
+                            <div class="card py-2 px-4 mx-auto bg-purplish h-100">
+                                <img class="card-img-top" src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image)">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Apskati arī mūsu Burgerus</h5>
+                                    <p class="card-text card-small-title">Esam specializējušies kā veidot burgerus, tāpēc droši pasūti tos.</p>
+                                    <a asp-action="ViewAdditional" asp-controller="Home" class="btn btn-primary bg-darkish border-0">Apskati vairāk</a>
+                                </div>
+                            </div>
+                        </div>
+                    break;
+                    case "Uzkodas":
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 my-2 mx-auto bg-green-hover">
+                            <div class="card py-2 px-4 mx-auto bg-green h-100">
+                                <img class="card-img-top" src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image)">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Piedāvājam arī Uzkodas</h5>
+                                    <p class="card-text card-small-title">Kā ir iespējams izstikt bez garšīgām uzkodām, ko var paņemt līdzi ceļā.</p>
+                                    <a asp-action="ViewAdditional" asp-controller="Home" class="btn btn-primary bg-darkish border-0">Apskati vairāk</a>
+                                </div>
+                            </div>
+                        </div>
+                        break;
+                    case "Saldie":
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 my-2 mx-auto bg-redish-hover">
+                            <div class="card py-2 px-4 mx-auto bg-redish h-100">
+                                <img class="card-img-top" src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image)">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Nogaršo arī mūsu saldos</h5>
+                                    <p class="card-text card-small-title">Veidojam saldos gan aukstus, gan atspirdzinošus</p>
+                                    <a asp-action="ViewAdditional" asp-controller="Home" class="btn btn-primary bg-darkish border-0">Apskati vairāk</a>
+                                </div>
+                            </div>
+                        </div>
+                        break;
+                    case "Dzērieni":
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-3 my-2 mx-auto bg-blueish-hover">
+                            <div class="card py-2 px-4 mx-auto bg-blueish h-100">
+                                <img class="card-img-top" src="data:image/jpeg;base64,@Convert.ToBase64String(item.Image)">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Atspirdzinošie dzērieni</h5>
+                                    <p class="card-text card-small-title">Ir iespējams veldzēt slāpes ar mūsu dzērieniem</p>
+                                    <a asp-action="ViewAdditional" asp-controller="Home" class="btn btn-primary bg-darkish border-0">Apskati vairāk</a>
+                                </div>
+                            </div>
+                        </div>
+                        break;
+            default:
+                        break;
+                }
+            }
+        </div>
+    </div>
+</section>
